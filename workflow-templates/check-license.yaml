@@ -1,0 +1,35 @@
+name: Check License
+
+on:
+  push:
+    branches: 
+      - $default-branch
+  workflow_dispatch:
+
+jobs:
+  create-license-if-not-exists: 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check License
+        run: |
+          if [ -f LICENSE ]; then
+            echo "License file exists"
+            echo "file_exists=true" >> $GITHUB_ENV
+          else
+            echo "File does not exist."
+            echo "file_exists=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create License If Not Exists
+        if: env.file_exists == 'false'
+        run: |
+          echo "Copyright © 2024-Present 7Rivers Inc - All Rights Reserved Unauthorized copying or distribution, via any medium is strictly prohibited. Proprietary and confidential" > LICENSE
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add LICENSE
+          git commit -m "Add LICENSE file because it did not exists"
+          git push origin ${{github.ref}}

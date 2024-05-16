@@ -1,0 +1,8 @@
+{
+    "name": "Check License",
+    "description": "Automatically add license if not exists",
+    "iconName": "license",
+    "categories": [
+        "utilities"
+    ]
+}
